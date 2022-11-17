@@ -1,10 +1,14 @@
 pipeline {
   agent docker	
   stages {
+
     stage ('BUILD') {
       steps {
         echo "This is Build stage" 
-        sh 'sleep 5'
+        sh ''' 
+		sleep 5
+	        exit 0 
+	   '''
       }  
     }  
     
