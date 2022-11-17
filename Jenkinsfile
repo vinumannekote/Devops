@@ -1,8 +1,5 @@
 pipeline {
-  agent {
-    label 'jenkins'
-  }
-
+  agent docker	
   stages {
     stage ('BUILD') {
       steps {
@@ -14,7 +11,7 @@ pipeline {
     stage ('TEST') {
       steps {
         echo "This is Test stage" 
-        sh 'sleep 5'
+        sh 'sleep 5; exit 1'
       }  
     }  
     
