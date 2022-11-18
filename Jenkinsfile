@@ -1,69 +1,19 @@
 pipeline {
   agent any
-   environment {
-        NAME = 'Harsha'
-      }
+  parameters {
+      string defaultValue: 'TEST', description: 'environment to deploy the application', name: 'ENV', trim: true
+      choice choices: ['main', 'master'], description: 'environment to deploy the application', name: 'BRANCH'
+  }
+
   stages {
     stage('BUILD') {
       steps {
-        echo "$NAME"
         sh '''
               sleep 5
-              echo $NAME
+              echo Deploying to $ENV
+              echo Code from $BRANCH branch
               exit 0
            '''
-      }
-    }
-
-    stage('TEST PARALLELE') {
-      environment {
-        NAME = 'Harsha'
-      }
-        parallel {
-          stage('TEST ON CHROME') {
-            steps {
-              echo 'This is Test on Chrome browser'
-              sh 'sleep 5; '
-            }
-          }
-          stage('TEST ON SAFARI') {
-            steps {
-              echo 'This is Test on SAFARI browser'
-              sh 'sleep 5;'
-            }
-          }
-        }
-    }
-
-    stage('DEPLOY') {
-      parallel {
-        stage('SERVER 1') {
-          steps {
-            echo 'This is Deploy to server1'
-            sh 'sleep 5'
-          }
-        }
-
-        stage('SERVER 2') {
-          steps {
-            echo 'This is Deploy to server2'
-            sh 'sleep 5'
-          }
-        }
-
-        stage('SERVER 3') {
-          steps {
-            echo 'This is Deploy to server3'
-            sh 'sleep 5'
-          }
-        }
-
-        stage('SERVER 4') {
-          steps {
-            echo 'This is Deploy to server4'
-            sh 'sleep 5'
-          }
-        }
       }
     }
   }
