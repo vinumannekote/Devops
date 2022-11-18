@@ -15,7 +15,7 @@ pipeline {
         // echo "Code from ${params.BRANCH} branch"
         sh '''
               echo Deploying to ${DEPLOY_ENV}
-              echo Code from ${DEPLOY_BRANCH} branch"
+              echo Code from ${DEPLOY_BRANCH} branch
               exit 0
            '''
       }
