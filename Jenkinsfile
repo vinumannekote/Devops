@@ -1,8 +1,8 @@
 pipeline {
   agent any
-  environment {
-    NAME = 'Harsha'
-  }
+   environment {
+        NAME = 'Harsha'
+      }
   stages {
     stage('BUILD') {
       steps {
@@ -16,6 +16,9 @@ pipeline {
     }
 
     stage('TEST PARALLELE') {
+      environment {
+        NAME = 'Harsha'
+      }
         parallel {
           stage('TEST ON CHROME') {
             steps {
