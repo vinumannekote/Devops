@@ -8,12 +8,11 @@ pipeline {
   stages {
     stage('BUILD') {
       steps {
-        sh '''
-              sleep 5
+        sh "
               echo Deploying to ${params.ENV}
               echo Code from ${params.BRANCH} branch
               exit 0
-           '''
+           "
       }
     }
   }
