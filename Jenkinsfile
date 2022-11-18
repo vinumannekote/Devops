@@ -10,8 +10,8 @@ pipeline {
       steps {
         sh '''
               sleep 5
-              echo Deploying to $ENV
-              echo Code from $BRANCH branch
+              echo Deploying to parms.ENV
+              echo Code from parms.BRANCH branch
               exit 0
            '''
       }
