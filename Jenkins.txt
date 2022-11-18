@@ -63,5 +63,7 @@ Assignment: Install blueocean plugin for pipeline
 		- Blue Ocean 
 		- Web for Blue ocean 
 		- common API 
-		- Dashboard for Blue Ocean	
+		- Dashboard for Blue Ocean
+
+	
 	
