@@ -7,14 +7,18 @@ pipeline {
 
   stages {
     stage('BUILD') {
+      environment {
+         DEPLOY_BRANCH = ${params.BRANCH}
+         DEPLOY_ENV = ${params.ENV}
+      }
       steps {
-        echo "Deploying to ${params.ENV}"
-        echo "Code from ${params.BRANCH} branch"
-        // sh '''
-        //       echo "Deploying to ${params.ENV}"
-        //       echo "Code from ${params.BRANCH} branch"
-        //       exit 0
-        //    '''
+        // echo "Deploying to ${params.ENV}"
+        // echo "Code from ${params.BRANCH} branch"
+        sh '''
+              echo "Deploying to ${DEPLOY_ENV}"
+              echo "Code from ${DEPLOY_BRANCH} branch"
+              exit 0
+           '''
       }
     }
   }
