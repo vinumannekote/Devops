@@ -5,8 +5,8 @@ pipeline {
       choice choices: ['main', 'master'], description: 'environment to deploy the application', name: 'BRANCH'
   }
  environment {
-         DEPLOY_BRANCH = ${params.BRANCH}
-         DEPLOY_ENV = ${params.ENV}
+         DEPLOY_BRANCH = "$BRANCH"
+         DEPLOY_ENV = "$ENV"
       }
   stages {
     stage('BUILD') {
