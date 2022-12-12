@@ -1,0 +1,26 @@
+
+1) Install Docker 
+	docker install ubuntu 
+
+2) Create a Docker hub account 
+	
+3) Pull and try a sample image 
+	a. docker pull ubuntu 
+	b. docker pull jenkins/jenkins:lts
+
+4) List the existing local images 
+	docker images 
+
+5) Try to create a container out of pulled image
+	a. docker run -it -d ubuntu /bin/bash 
+	b. docker run -it -d --name myjenkins -p 8080:8080 -p 50000:50000 -v /var/jenkins_home jenkins/jenkins:lts
+
+6) List containers 
+	docker ps 
+		(or)
+	docker container ls 
+
+7) To get jenkins admin password 
+	docker logs <container_id / container_name> 
+
+	
