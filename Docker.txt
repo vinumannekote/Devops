@@ -52,3 +52,127 @@ Virtualization (VM)
 host machine 
 	This is the machine in which docker is running 
 	
+
+Docker images 
+
+	List docker images 
+	    docker images 
+
+	To download a docker images / How to use hub images 
+	   docker pull <image_name>:<tag>
+		ex: docker pull ubuntu:18.04
+	   
+	   Note: If we won't provide any tag then docker will consider 'latest' as default tag
+	
+	To upload an images to a registry 
+	   docker push <username>/<repo_name>:<tag>
+
+		ex: docker push harshajain/my_ubuntu:1.0
+
+	To tag a image 
+	   docker tag <old_image>:<tag> <new_image>:<tag>
+		
+	To delete a image/images 
+	   docker rmi <image_name1>:<tag> <image_name2>:<tag>
+		    (OR)
+	   docker rmi <image_id1> <image_id2>
+		
+          To force delete a image 
+		docker rmi -f <image_id>
+	
+       To list all image id's 
+	  docker images -q 
+
+       To delete all the images 
+	  docker images -q | xargs docker rmi
+		        (OR)
+	  docker rmi $(docker images -q)
+
+Docker container 
+       To list all running containers 
+	   docker ps 
+		(or)
+	   docker container ls 
+       
+       To list all containers 
+	   docker ps -a 
+ 		(or)
+	   docker container ls -a
+
+       To Delete a container 	
+	   docker rm <container_name>/<container_ID>
+		
+       To delete a running container 
+	   
+	1. Gracefull delete 
+	   a. Stop the running container 
+		docker stop <container_name>/<container_ID>
+           b. Delete the stopped container 	
+	        docker rm <container_name>/<container_ID>
+
+	    Best way: docker rm $(docker stop <container_name>/<container_ID>)	
+
+			(OR)
+
+        2. Delete by force 
+	      docker rm -f <container_name>/<container_ID> 
+           
+       To stop all running container 
+	    docker stop $(docker ps -q)
+       
+       To delete all stopped containers 
+	    docker rm $(docker ps -q --filter "status=exited")	 	
+       			(OR)
+	    docker container prune 
+		
+To clean docker environment 
+	docker system prune 
+	
+	Note: except volumes it will remove below resources 
+		- all stopped containers
+  		- all networks not used by at least one container
+  		- all dangling images
+  		- all dangling build cache       
+       
+	To remove unused volumes 
+	  docker system prune --volumes
+
+        To remove only unused images 
+	  docker image prune 
+
+	To remove only stopped container 
+	  docker container prune 
+
+	To remove only un-attached volumes 
+	  docker volume prune 
+	
+	To remove only unused network 
+	  docker network prune 
+
+	Note: To avoid user confirmation use '-f'
+		ex: docker container prune -f 
+			      (or)
+		    yes | docker container prune 	 
+
+	To create a container 
+		docker run -it -d --name <container_name> <image>:<tag> 
+		
+		DESC: -i: Interactive mode
+		      -t: enable tty terminal
+ 		      -d: To create container in detached mode (Background)
+		      --name: To provide a used defined name to container.
+			
+
+Assignment: 
+	docker cp 
+	docker ls 
+	docker pause
+	docker restart 
+	docker top - To list the processes running inside a container 
+			docker top <contaienr_ID>
+	docker logs 
+	docker inspect 
+	docker info 
+	
+
+				
