@@ -259,7 +259,16 @@ Docker custom image / Dockerfile / Docker instructions
 		COPY <source_path_from_build_context> <destination_inside_image>	  
 		ADD <source_path_from_build_context> <destination_inside_image>	  
 
- 
+Assignment: 
+	1. Complete demo COPY & ADD instruction difference.
+	2. Create ubuntu custom image with all the required package installed.
+		packages: git, curl, tomcat, jq
+	3. Create an image from a container.
+		a. create a container 
+		b. login to above container and create some file/directories 
+		c. Create an image from above container.
+		d. create second container from above image 
+		e. The file created in the first container should exists in this container.
 
 
 
