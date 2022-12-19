@@ -109,22 +109,29 @@ Docker container
 	   docker container ls -a
 
        To Delete a container 	
-	   docker rm <container_name>/<container_ID>
+	   docker rm <container_name>
+	          (or)
+	   docker rm <container_ID>
 		
        To delete a running container 
 	   
 	1. Gracefull delete 
 	   a. Stop the running container 
-		docker stop <container_name>/<container_ID>
-           b. Delete the stopped container 	
-	        docker rm <container_name>/<container_ID>
+		docker stop <container_name>
+			(or)
+		docker stop <container_ID>
+           
+	   b. Delete the stopped container 	
+	        docker rm <container_name>
+			(or)
+		docker rm <container_ID>
 
-	    Best way: docker rm $(docker stop <container_name>/<container_ID>)	
+	    Best way: docker rm $(docker stop <container_name / container_id>)	
 
 			(OR)
 
         2. Delete by force 
-	      docker rm -f <container_name>/<container_ID> 
+	      docker rm -f <container_name/container_ID> 
            
        To stop all running container 
 	    docker stop $(docker ps -q)
@@ -201,6 +208,7 @@ Assignment:
 	docker info 
 		information of docker daemon 
 
+
 To Login to a container 
 	1. Docker attach 
 			It will attach to the main process/Command running inside a container 
@@ -271,18 +279,90 @@ Assignment:
 		e. The file created in the first container should exists in this container.
 
 
+	ENV 
+	   This instruction is used to set the environment variable inside the container. 
+	   Using this instruction we can create env variables at build time which means in the docker images.
+		ex:
+			
+		   1. For individual variable	 
+		      ENV <variable_name> <value>
+			     (OR)
+		      ENV <variable_name>=<value>
+
+		   2. For multiple variable
+	 	      ENV <variable_name1>=<value1> <variable_name2>=<value2> .....
+
+	   To create environment variables at run time (means in containers)
+		1. With the docker run command 
+			docker run -e <variable_name>=<value> -e <variable_name>=<value>
+		2. With a list of variables in a file (.env file)
+			docker run --env-file <file_path> ...		
+		
+	ARG 
+	   using this instruction we can pass parameters to Dockerfile as user inputs.
+		
+		ex: ARG <arg_variable_name>=<value>
+
+		Note: <value> acts as default value to the arg_variable means if user does not set 
+		      the arg value at build time this value will be used.
+
+		To pass the value at build time 
+			docker build --build-arg <arg_variable_name>=<user_value> 
+
+	CMD vs ENTRYPOINT 
+		- Both CMD and ENTRYPOINT are used to define the default execution command of the container (the command 
+	   	  which will be executed in the container as main process).
+		- If we use multiple CMD or ENTRYPOINT in the same Dockerfile only the last one will 
+		  be considered.
+		- If we use both CMD and ENTRYPOINT in the same Dockerfile, then ENTRYPOINT gets the 
+	          highest priority and the command defined using CMD will be as parameters to ENTRYPOINT.
+
+		Difference 
+		   - CMD can be completely overridden at the runtime (with docker run at the end we can provide 
+	   	     the command to override the CMD). 
+		   - ENTRYPOINT can't be overridden at the runtime but the command passed at the runtime 
+		     will become parameters to ENTRYPOINT command defined in Dockerfile.
+		
+		Syntax: we can define command in 2 ways 
+			1. shell format 
+		   	   CMD "ls -lrt"
+		
+			2. EXEC format 
+			   - Always first element is command.
+			   - Except first element all the other elements are parameters to command. 
+
+    			   CMD ["ls","-lrt"]  
 
 
+Assignment: Q. How to override the ENTRYPOINT from the runtime?
+		Yes, (Find out how?)
+		  
+
+	WORKDIR 
+		This is used to set the working directory for all the instructions that follows it.
+		such as RUN, CMD, ENTRYPOINT, COPY, ADD .... 	
+		   
+		ex: WORKDIR <path_in_container>
+	   
+		
+
+IQ: What is the difference b/w CMD and ENTRYPOINT ? 
+    What is the difference b/w COPY and ADD ?
+    What is the difference b/w ENV and ARG ?	
+    What is the difference b/w Expose and Publish ?	
+
+	EXPOSE 
+	     Syntax: EXPOSE <port_number>
+	     - Used to expose a port to the docker network so that all the other containers in 
+	       the same docker network can access it.
+	     - Exposes the port with in the host machine.	
+		
+	MAINTAINER
+	     used to provide the author name metadata.
 
 
-
-
-
-
-
-
-
-
-
+Publish 
+			
+	docker run -it -d --rm --name -p 8080:8090
 
 				
