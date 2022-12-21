@@ -11,13 +11,3 @@ docker run -it --rm -v maven_repo:/root/.m2 \
 docker run -it --rm -v maven_repo:/root/.m2 \
     -v "$(pwd)":/app -w /app \
     --network maven maven:3.8.6-openjdk-18-slim mvn clean integration-test                
-
-
-qp_backend i-019536111cf7be00d running t2.medium ami-0a23ccb2cdd9286bb
-jenkins i-079965a31619f64e2 running t2.small ami-0c1a7f89451184c8b
-QLearners i-0f020e02bdba01596 running t2.medium ami-0851b76e8b1bce90b
-QLearners-backend i-06e2eec334739e936 running t2.small ami-0851b76e8b1bce90b
-chime i-0438703948f41f03f running t2.medium ami-07eaf27c7c4a884cf
-test-june-batch i-0eeaeb12d2a59d7a3 running t2.micro ami-05c8ca4485f8b138a
-QP_Frontend TEST i-0af9d85df6314233f running t2.medium ami-006d3995d3a6b963b
-QP_Frontend PROD i-0df3397441872bea7 running t2.medium ami-006d3995d3a6b963b
