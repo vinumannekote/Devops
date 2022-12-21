@@ -423,9 +423,58 @@ Assignment: Try docker mounts and volumes.
 	    Use EFS/s3 as the docker volume 	
 	
     Docker network type (Bridge, none, host)
-	
-	To create a docker network 
-		docker network create <network_name>	
+	1. Bridge 
+		- This is a private internal network created by docker on the host machine 
+		  by name docker0	
+		- This is the default network type for all the container which are created 
+          without any network configurations.
+		- By default all the containers in the same bridge can communicate with 
+		  each other without any extra configuration.	
+		- We cannot use container name for communication only IP address is allowed in 
+		  default bridge.
 
-	To delete network 
-		docker network rm <network_name>
+		Custom bridge 
+			To create bridge network 
+				docker network create --driver bridge my_bride 
+			
+			- In custom bridge containers can communicate with eachother with container 
+			  name and also with IP address.
+	
+
+		Example: 
+			
+			bridge      ap1 - 172.17.0.2  ap2 - 172.17.0.3
+			my_bridge   ap3 - 172.18.0.2  ap4 - 172.18.0.3    
+
+			Check Ping
+    				1) Check can we ping by the name 
+        				
+    
+    				2) Check bridge to bridge communication 
+        				ap1 -> ap3 or ap4 
+
+	2. Host 		  
+		- This driver removes the network isolation between docker and the host.
+		- The containers are directly connected to host machine network without  
+		  extra layer of any docker network.
+		- Shares the same TCP.IP stack and same namespace of host machine.  
+		- All the network interfaces which are there in host machine are 
+		  accessible by this container.
+
+	3. None 
+		- Containers are not attached to any network by docker.
+		- All the required network configurations need to be done 
+		  manually.
+		- The host or any other containers won't be able to communicate 
+		  with this container until a custom network is configured.
+
+	Overlay 
+		- Overlay networks are meant to define network communication of containers hosted on different host machines. 
+		- To create such a network we use the ‘overlay’ driver. 
+		- The overlay driver is a native driver by docker that helps to create a single layer2 broadcast domain across containers 
+		  hosted on multiple Docker host machines. 
+
+	Assignment: Connect 2 bridge networks 
+			docker network connect 
+
+
