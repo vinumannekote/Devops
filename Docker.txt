@@ -43,11 +43,11 @@ Virtualization (VM)
 	2. Heavyweight - consume more host 		2. Lightweight
 	   resources 	
 	3. VM uses hypervisor 				3. containerisation tool is used 
-	4. limited performance - Boot up time        4. Native performance - usually boot 
-		is more which is in minutes 			   fast in seconds.
-	5. Consumes more storage 				5. Shares OS storage means only uses 
-												   required storage.
-	6. Supports all OS 							6. Supports on Linux
+	4. limited performance - Boot up time           4. Native performance - usually boot 
+		is more which is in minutes 	           fast in seconds.
+	5. Consumes more storage 		        5. Shares OS storage means only uses 
+							   required storage.
+	6. Supports all OS 				6. Supports on Linux
 
 host machine 
 	This is the machine in which docker is running 
@@ -367,7 +367,7 @@ Docker volume
 		- The changes made in host will retain in container and also changes made inside container in this 
 		  location will retain in host 
 		- If container is deleted host directory will not be deleted (data persistence).
-		- It is not preferrable to mount a single directory to multiple container. (multiple containers processes 
+		- It is not preferable to mount a single directory to multiple container. (multiple containers processes 
 		  may try write the data to same file which is not possible)
 
 	Volumes 
@@ -477,4 +477,5 @@ Assignment: Try docker mounts and volumes.
 	Assignment: Connect 2 bridge networks 
 			docker network connect 
 
-
+Docker multistage build 
+	
