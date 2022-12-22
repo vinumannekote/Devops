@@ -477,5 +477,123 @@ Assignment: Try docker mounts and volumes.
 	Assignment: Connect 2 bridge networks 
 			docker network connect 
 
-Docker multistage build 
+
+Multistage build 
+	How to optimise docker build process ?
+	How to reduce the size of the docker image or container ? 
+
+	After docker 1.6 version docker released this option.
+	1. There are 2 problems with the normal build process 
+			1. Size: challenge is to keep the image and its containers size as minimal as  		
+			   possible.
+			2. larger the surface area more the application is vulnerable to attacks. 
 	
+		- Multistage build allows us to define multiple FROM in same Dockerfile.
+		- Dependency between multiple FROM is maintained by naming FROM using 
+		  AS keyword and we can refer this name in another FROM.
+
+				FROM <base_image> AS <STAGE_NAME>
+				
+		- Only the final FROM image is created leaving back all the other FROM.
+		- Copy only the required files from the named FROM stage like below.
+				FROM final_build
+				COPY --from <STAGE_NAME> <src_named_stage> <dest>
+	
+	2. Always try to use the slim / alpine / stretch version of base image instead 
+	   of using the fully loaded base image.
+	   
+
+Build and deploy maven application using docker.
+	docker build -t maven-app .
+	docker stop calc
+	docker cp calc:/usr/local/tomcat/webapps/calculator.war /home/ubuntu/
+	docker run -it --rm -d -p 8095:8080 --name calc maven-app 
+		
+Docker maven direct run example 
+
+	To build the war file
+		docker run -it --rm -v $(pwd)/libraries:/root/.m2 -w /app -v "$(pwd)":/app maven mvn clean package
+	
+	To build the war file with test phase skipped
+		docker run -it --rm -v $(pwd)/libraries:/root/.m2 -w /app -v "$(pwd)":/app maven mvn clean package -Dmaven.test.skip=true
+	
+	To create a custom network of type bridge 
+		docker network create --driver bridge maven
+
+	To run a test sever for Integration test 
+		docker run -it -d --rm -v maven_repo:/root/.m2 \
+    			-v "$(pwd)":/app -w /app \
+   		 	-p 9999:9999 \
+    			--network maven \
+    			--name jetty_container maven:3.8.6-openjdk-18-slim mvn jetty:run
+
+	To run Junit test 
+		docker run -it --rm -v maven_repo:/root/.m2 \
+   			-v "$(pwd)":/app -w /app \
+    			--network maven maven:3.8.6-openjdk-18-slim mvn clean test		
+
+	To run Integration test 
+		docker run -it --rm -v maven_repo:/root/.m2 \
+    			-v "$(pwd)":/app -w /app \
+    			--network maven maven:3.8.6-openjdk-18-slim mvn clean integration-test  
+
+Docker Architecture 
+
+	Docker Daemon 
+		- A background process that manages docker images, containers, network and volumes.
+		- This Daemon constantly listens for docker API request and processes them.
+	
+	Docker REST API 
+		- API which is used by applications to interact with the docker daemon. 
+		
+	Docker CLI 
+		- It is a command line interface for interacting with docker daemon through
+		  REST api.
+	
+	Docker Objects 
+		- Images, Containers, Networks, Vloumes
+
+Benefits of Docker 
+
+	Flexible: 
+		Complex applications cab be divided and containerised in small competents called 
+		microservice. 
+	
+	Lightweight: 
+		Containers share the machine’s OS system kernel and therefore do not require 
+		an OS per application, driving higher server efficiencies and reducing server and licensing costs
+
+	portable: 
+		we can build images anywhere and then deploy to cloud, run anywhere.	
+
+States of container / Lifecycle of container 
+
+	1. Created - if container is newly created and container is not yet started.
+	2. Running - A currently running container. It means there is no problem 
+				 with container to run the process.
+	3. Exited - A container ran and completed of execution with failure.
+	4. paused - A container whose process have been paused. (we can unpause the container)
+	5. Dead - if docker daemon tried and failed to stop a container (host ram full)
+	6. Restarting - container will be in the phase of restarting the main process.
+
+Dangling Images 
+	Dangling images are created while executing layers in image build process that have no relationship 
+	to any tagged images. They no longer serve a purpose and it consume disk space.
+	
+	To list dangling images 
+	    docker images -f dangling=true
+	
+	To remove only dangling images 
+	    docker rmi $(docker images -f dangling=true -q)
+
+   	To delete all unused images including dangling image
+	    docker image prune
+
+	    docker system prune 
+		Remove all unused containers, networks, images (both dangling and unreferenced),
+		and optionally, volumes. 
+		This will remove:
+  		  - all stopped containers
+  		  - all networks not used by at least one container
+  		  - all dangling images
+  		  - all dangling build cache
