@@ -62,3 +62,78 @@ Worker node components
 
 
 Assignment: What happens when a new pod request comes to (control plane / Master node) ? 
+
+Namespaces and cgroups
+	- Docker uses linux namespaces to provide isolated workspace for processes called
+	  conatainer
+	- when a container is created, docker creates a set of namespaces for it and provides 
+	  a layer of isolation for container.
+	- Each container run in a different namespace 
+	
+	namespace (To list - lsns)
+		cgroups 
+			- Linux OS uses cgroups to manage the available hardware resources such as 
+			  cpu, RAM, Disk, I/O.
+			- we can control tje access and also we can apply the limitations 
+
+			To list - lscgroup	
+		pid - namespace for managing processes (process isolation)
+		user - namespace for non-root user on linux.
+		uts - namespace for unix timesharing system which isolates kernel and version identifiers,
+			  time bonding of process.
+		ipc - (interprocess communication) namespace for managing the process communication.	  
+		mnt - namespace for managing filesystem mounts.
+		net - namespace for managing network interfaces.
+
+ 
+npm / yarn 
+   node js - Backend 
+   React js - FrontEnd (RJS) 
+   Vue js - FrontEnd (HTML - CSS - RJS) 
+
+
+YAML File 	
+   - filetype .yaml or .yml 
+   - YAML file contains key - value pairs where key is fixed and defined by
+     kubernetes and value is user defined.	  
+
+   - Values supports - string, Integer, Boolean, Array, List 
+
+example:
+
+List Representation 
+name: Harsha 	
+hobbies: ["Coding", "Watching movies"]
+ 
+	    (OR)
+
+name: Harsha 	
+hobbies: 
+	- Coding
+	- Watching movies
+
+
+employees:
+ employee:
+            - name: harsha
+              fist_name: harsha
+	      second_name: Jain	 
+            - name: Mohan
+
+
+k8s yaml syntax example 
+
+apiVersion: v1 
+kind: Pod 
+metadata: 
+   name: my-first-pod
+spec: 
+   containers: 
+         - name: my-nginx 
+           image: nginx:latest
+           ports:
+            - containerPort: 80   
+            - containerPort: 443 
+
+	
+
