@@ -127,6 +127,8 @@ apiVersion: v1
 kind: Pod 
 metadata: 
    name: my-first-pod
+   labels: 
+	app: my-nginx	
 spec: 
    containers: 
          - name: my-nginx 
@@ -135,5 +137,144 @@ spec:
             - containerPort: 80   
             - containerPort: 443 
 
+	apiVersion: v1
+		- This is the version of api used to create a k8s object.
+		- The fields are case-sensitive and YAML use camelcase.
+		- The type of api are alpha, beta and stable.
+		
+	kind: Pod
+		- here we specify which object we need to create. 
+		- Always object name first letter is capital.
+		
+	metadata:
+	    - This field is used to provide information on the object 
+		  which we are creating.
+		- Information such as name, labels and annotations. 	
 	
+	spec:
+		- This is used to do the actual configuration of the 
+		  object.
 
+		 ports: 
+		    - containerPort: 80	
+
+
+To create / apply a configuration 
+	kubectl apply -f <file>.yml	
+	
+To list objects 
+	kubectl get <obeject_type>
+		ex: List pods - kubectl get pods 
+		    List deployment - kubectl get deployments
+			
+To delete objects 
+	kubectl delete <object_type>
+
+
+Labels and Selector 
+
+Labels 
+ 	- Labels is a metadata key-values used which can be applied to any object in k8s.
+	- labels are used to identify any object by using selectors.
+	- Multiple objects can have same label 
+	- Same object can have multiple label 
+	- The length of each label value should be less that 63 characters.
+		
+Selectors
+ 	- Selectors are used to filter and identify the any labeled objects matching the label key-value and 
+	  condition of selector.
+	
+Equality-based selector 
+	- we can use only one label in comparison and it will look for exact match 
+	- Operators that can be used  equal_to ( = or == ) and not_equal_to ( != )
+	ex: 
+		 selector:
+    			matchLabels:
+     			app: nginx
+
+		       (OR)
+
+		 selector:
+    			matchLabels:
+     			app=nginx
+
+Set-based selector 
+	- We can select / filter objects based on multiple set of values to a label key 
+	- Operators that we can use in, notin and exists 
+	ex: 
+		 selector:
+    			matchLabels:
+     			app in (nginx, my-nginx, nginx1, nginx2)
+			
+			app notin (nginx, my-nginx, nginx1, nginx2)	
+		 
+			app exists (nginx, my-nginx, nginx1, nginx2)	
+	
+	
+Annotations: 
+	- These are non-identifying metadata so we can't use Selectors on annotations.
+	- This for record purpose only, like we can provide some user information to objects.
+	ex: personal_info, phone_number, imageregistry, author 	
+		metadata: 
+			annotations: 
+				author: harsha 
+	
+ReplicaSet vs Replication Controller 
+	- Both ensures that a specified number of pod replicas are always running at 
+	  a given point of time.
+	- Replication Controller is old way of replicating pods and it is now replaced by ReplicaSet.
+	
+	The only difference between ReplicaSet & Replication Controller
+	   - Replication Controller supports only Equality-based selector.
+	   - ReplicaSet controller supports both Equality-based and Set-based selector.	
+				
+Deployment controller / Deployment / Deployment k8s
+	- Deployment is used to create replicas of pod and It makes sure that at a given point 
+	  of time that number of replicas of pods is always running by using ReplicaSet controller.
+	- If we update the configuration of deployment, it will automatically updates in all the pod replicas.
+	- Rollout and Rollback of pod update is possible. We can use different deployment strategy for update,
+	  by default it uses RollingUpdate. 
+		Other strategies: canary, Recreate, Ramped and Blue-Green 
+	- we can pause the deployment whenever we need.
+	- Deployment internally got its own autoscaler which is of type horizontal smaller.
+	 
+	  RollingUpdate	
+		MaxSurge 
+		  - Specifies the maximum number of pods the Deployment is allowed to create at one time. 
+		  - You can specify this as a whole number (e.g. 5), or as a percentage of the total required number of pods 		
+		         (e.g. 10%, always rounded up to the next whole number). 
+		  - If you do not set MaxSurge, the implicit, default value is 25%.
+		
+		MaxUnavailable 
+		  - specifies the maximum number of pods that are allowed to be unavailable during the rollout. 
+		  - Like MaxSurge, you can define it as an absolute number or a percentage. 
+	
+	To scale up and scale down 
+		1. We can update the replicas count in spec / configuration / yaml file.
+		2. We can use kubectl cli 
+			kubectl scale deployment.v1.apps/nginx-deployment --replicas=10
+
+	To autoscale 
+		1. kubectl autoscale deployment.v1.apps/nginx-deployment --min=5 --max=10 --cpu-percent=80
+
+	deployment = pod + ReplicaSet + autoscalling + RollingUpdate 
+	
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
