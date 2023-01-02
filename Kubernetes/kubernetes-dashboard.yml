@@ -359,3 +359,7 @@ spec:
 
 # Get token by running below command 
 # kubectl describe secret -n kubernetes-dashboard kubernetes-dashboard-token | grep -i 'token:      ' | awk -F 'token:      ' '{print $NF}'
+
+
+
+
