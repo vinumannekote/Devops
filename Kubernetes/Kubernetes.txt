@@ -278,3 +278,81 @@ spec:
         image: nginx:1.14.2
         ports:
         - containerPort: 80
+
+DaemonSet 
+	- DaemonSet creates that a copy of pod and ensures a copy of pod is always running on all the 
+	  worker nodes.
+	- If a new node is added or if a node is deleted then DaemonSet will automatically add/delete the pod form 
+	  that worker node.
+
+
+	Usage: 
+		- we use DaemonSet to deploy monitoring agents in every worker node. 
+		- Log collention agents to grab the logs from worker and all the pods running in it.
+ 
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nginx-daemonset
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+
+Statefull Applications 
+	- User session data is saved at the server side.
+	- if server goes down, it is difficult to transfer the session data to other server. 
+	- This type of application will not work, if we want to implement autoscaling.
+	
+Stateless Applications
+	- user session-data is never saved at the server side.
+	- using a common authentication gateway / client token method to validate the users 
+	  once for multiple microservices.	
+
+https://medium.com/tech-tajawal/microservice-authentication-and-authorization-solutions-e0e5e74b248a
+
+StatefullSet
+
+	StatefullSet = Deployment + sticky identity for each and every pod replica
+
+	- Unlike a deployment a StatefullSet maintains a sticky identity for each of the pod.
+
+	(When a user send request StatefullSet will remember the pod which servers the request, If same user send a second request 
+	 within session time then StatefullSet will server that request to the same pod.)
+
+Node controller 
+  	- Looks for node statuses and responds to API server only when a node is down.
+
+Endpoint controller 
+	- Populates the information of endpoints of all the objects.
+
+
+Assignment: 
+	
+A. How to use custom images / connect to a registry through k8s 
+	1. Login to the docker hub account 
+		  docker login 
+	2. Create a app to print ip 
+			using flask 
+	3. 	push the image to your registry 
+	4 use the above custom image in k8s spec file.
+	
+		image: <username>/<regirty_name>:<tag>
+		imagePullPolicy: IfNotPresent	
+
+Service (svc)
+ 
+
+
+
