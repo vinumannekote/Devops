@@ -45,6 +45,7 @@ spec:
   selector:
     k8s-app: kubernetes-dashboard
 
+
 ---
 
 apiVersion: v1
