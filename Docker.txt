@@ -215,7 +215,6 @@ To Login to a container
 				docker attach <contaienr_ID>
 
 			Note: To safely exit after attach <ctrl> + qp
-
  
 	2. Docker exec 
 			using exec we can run any command inside a running container. 
