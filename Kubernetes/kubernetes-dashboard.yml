@@ -83,9 +83,9 @@ type: Opaque
 apiVersion: v1
 kind: Secret
 metadata:
-  name: test-sa-token
-    annotations:
-      kubernetes.io/service-account.name: kubernetes-dashboard
+  name: kubernetes-dashboard-token
+  annotations:
+     kubernetes.io/service-account.name: kubernetes-dashboard
 type: kubernetes.io/service-account-token
 
 ---
