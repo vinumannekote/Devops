@@ -39,7 +39,7 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - nodePort: 34000
+    - nodePort: 32100
       port: 443
       targetPort: 8443
   selector:
@@ -317,3 +317,7 @@ spec:
       volumes:
         - name: tmp-volume
           emptyDir: {}
+
+
+# Get token by running below command 
+# kubectl describe secret -n kubernetes-dashboard kubernetes-dashboard-token | grep -i 'token:      ' | awk -F 'token:      ' '{print $NF}'
