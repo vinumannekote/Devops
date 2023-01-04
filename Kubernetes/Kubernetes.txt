@@ -490,4 +490,80 @@ Assignment: 1) Try exec to a pod and Check
             2) Difference between NodePort vs ClusterIP vs Headless service with demo 
 
 
+Service Discovery  (How a microservice will communicate with other microservice)
+
+	1. Services 
+		we can use the full qualified name of service to discovery a microservice (pod).
+		ex: service/<service_name>
+
+	2. DNS
+		- DNS server is added to the cluster in order to watch the k8s service request.
+		- API server will create DNS records for each new service.
+		- Record A type is used in k8s service discovery and this DNS is created on service
+		  and pod objects.
+		syntax:
+			<object_name>.<namespace_name>.<object_type>.cluster.local
+			
+	
+	3. Default ENV variables 
+		- which ever the pod that runs on a node, k8s adds environment variables for 
+		  each of them to identify the service running in it.
+
+https://dev.to/narasimha1997/communication-between-microservices-in-a-kubernetes-cluster-1n41
+
+
+Pod lifecycle 
+	1. pending 
+		- This is the state of pod when pod will be waiting for k8s cluster to accept it.
+		- pod will be downloading the image form registry.
+		- pod will be in pending state if scheduler still trying to assign to a node.
+
+	2. Running 
+		- The pod got a node assigned and all the containers inside the pod is running.
+		- At least one container is running and other in starting state (no container should be in exited)
+		
+	3. Failed 
+		- All the container in pod should not be running and at least one container should be in terminated state 
+		  in failure.
+	
+	4. Succeeded 
+		- All the containers in pod have been terminated successfully / gracefully 
+	
+	5. Unknown 
+		- For some other reason the API server can not get the pod state the it will put pod in Unknown state 
+		- When k8s can't communicate with the worker node the it will put all the pods of that worker node to unknown.
+
+	6. Terminating
+		- when pod is being deleted 
+	
+	
+	Container status 
+		Running 
+			- When container is running the process without error 
+		
+		Terminated 
+			- Process inside the container has completed the execution successfully or it may be failed 
+			  due to error.
+		
+		Waiting
+			- If a container is not running or neither in terminated state.
+
+
+	Common errors 
+		ImagePullBackOff 
+			- Docker image registry is not accessible 
+			- Image name is incorrect.
+		
+		RunContainerError 
+			- Configmap / secrets are missing 
+			- volumes are not available 
+		
+		CrashLoopBackOff 
+			- This error comes when probe check fails.
+			- Error in docker image
+
+
+
+
+
 		
