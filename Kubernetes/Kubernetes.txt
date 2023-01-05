@@ -563,6 +563,27 @@ Pod lifecycle
 			- Error in docker image
 
 
+ConfigMaps and Secrets 
+	- Cofigmaps are k8s objects that allows us to separate and attach configuration data from the image content of the pod.
+	- We attach environment variables to the pod. 
+	- The data is not encrypted by default in configmaps so better to use non-confidential data in configmaps.
+	
+	Create a configmap
+		1. Create a file by name "app.properties"
+			environment=test
+			database_url="192.168.1.1"
+			database_password="adjhfgjladhgalhg"
+			
+		2. Load the single config file 
+			kubectl create configmap <configmap_name> --from-file configs/app.properties
+
+		   Load the multiple config files 	
+			kubectl create configmap <configmap_name> --from-file configs/
+	
+	 
+
+
+
 
 
 
