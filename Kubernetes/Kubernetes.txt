@@ -583,9 +583,22 @@ ConfigMaps and Secrets
 	Create a secret 
 		- Data by default encrypted by base64 format and we use it for confidential data 
 
-	 	
-	
-		Types of secrets 
+		1. Get values in base64 format 
+			echo -n '<value>' | base64 
+
+		2. Copy the base64 value got from above command and use it in secrets 
+
+			apiVersion: v1
+			kind: Secret
+			metadata: 
+    			    name: my-secret
+			type: Opaque    
+			data:
+   				db_url: cG9zdGdyYXNlLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWw=
+   				db_username: dGVzdF91c2Vy
+   				db_password: cGFzc3dvcmQ= 
+		
+		3. Types of secrets 
 			Opaque					arbitrary user-defined data
 			kubernetes.io/service-account-token	ServiceAccount token
 			kubernetes.io/dockercfg			serialized ~/.dockercfg file
@@ -593,6 +606,15 @@ ConfigMaps and Secrets
 			kubernetes.io/basic-auth			credentials for basic authentication
 			kubernetes.io/ssh-auth			credentials for SSH authentication
 			kubernetes.io/tls			data for a TLS client or server
+		
+		4. Using secrets in pod spec
+
+			env: 
+       			   - name: DB_URL
+         		     valueFrom: 
+            		        secretKeyRef: 
+               				name: my-secret
+               				key: db_url
 
 
 Persistent Volume (pv)
