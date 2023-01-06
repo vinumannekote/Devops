@@ -580,9 +580,48 @@ ConfigMaps and Secrets
 		   Load the multiple config files 	
 			kubectl create configmap <configmap_name> --from-file configs/
 	
-	 
+	Create a secret 
+		- Data by default encrypted by base64 format and we use it for confidential data 
+
+	 	
+	
+		Types of secrets 
+			Opaque					arbitrary user-defined data
+			kubernetes.io/service-account-token	ServiceAccount token
+			kubernetes.io/dockercfg			serialized ~/.dockercfg file
+			kubernetes.io/dockerconfigjson		serialized ~/.docker/config.json file
+			kubernetes.io/basic-auth			credentials for basic authentication
+			kubernetes.io/ssh-auth			credentials for SSH authentication
+			kubernetes.io/tls			data for a TLS client or server
 
 
+Persistent Volume (pv)
+	- It is a storage space which we reserve as persistent volume.
+	- This storage space can be claimed to any pod in the cluster. 
+	- These are cluster level object and not bounded to namespace.
+	
+	we can control the access  (accessModes)
+	 - ROX (ReadOnlyMany) 
+		Volume can be claimed from multiple worker nodes in read-only mode 
+	 - RWX (ReadWriteMany)
+		Volume can be claimed from multiple worker nodes in read-write mode 
+	 - RWO (ReadWriteOnce)
+		- Volume can be claimed from only one worker node in read-write mode. 
+		- k8s allow multiple pods to access the volume when the pods are running on the same node.
+         - RWOP (ReadWriteOncePod)
+                - The volume can be mounted as read-write by only a single Pod. 
+		- Use ReadWriteOncePod access mode if you want to ensure that only one pod across whole cluster 
+		  can read-write that PVC.
+
+Persistent Volume Claim (pvc)
+	- This is the amount of memory needed to claim in any pod based on the access modes.
+	- After we create pic, k8s looks for a Persistent Volume which matches the claim same configuration.
+	- If Persistent Volume is found with same configuration, it binds the cliam to the pod as volume. 
+
+
+Assignment: 
+	- Dynamic volume provisioning 
+	- Storage class 	
 
 
 
