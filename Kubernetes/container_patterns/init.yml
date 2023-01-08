@@ -10,7 +10,7 @@ spec:
            - containerPort: 80 
         volumeMounts: 
            - name: shared
-           - mountPath: /usr/share/nginx/html
+             mountPath: /usr/share/nginx/html
     initContainers:
       - name: busybox
         image: busybox
@@ -18,7 +18,7 @@ spec:
         args: ["-c","echo '<html><h2>Hi I am from Inint container</h2></html>' >> /work-dir/index.html"]
         volumeMounts:
            - name: shared
-           - mountPath: "/work-dir"
+             mountPath: "/work-dir"
     dnsPolicy: Default       
     volumes: 
       - name: shared
