@@ -640,12 +640,65 @@ Persistent Volume Claim (pvc)
 	- After we create pic, k8s looks for a Persistent Volume which matches the claim same configuration.
 	- If Persistent Volume is found with same configuration, it binds the cliam to the pod as volume. 
 
-
 Assignment: 
 	- Dynamic volume provisioning 
 	- Storage class 	
 
+Container patterns
+init container 
+	- init containers are the containers that will run completely before starting 
+		  the main app container.
+	- This provides a lifecycle at the startup and we can define things for 
+      initialization purpose.
+    - kubernetes has stopped support of probes in init containers.
+    - These are pod level objects.
+	- we can use this container to have some deply on the startup of the main container.
+	
+	
+	These are some of the scenarios where you can use this pattern
+		- You can use this pattern where your application or main containers need some
+		  prerequisites such as installing some software, database setup, permissions on the file
+		  system before starting.
+		- You can use this pattern where you want to delay the start of the main containers.
 
+	1. login to pod 
+				kubectl exec -it <pod_name> -- /bin/sh 
+		2. apt update && apt install -y curl 
+		3. curl localhost
+			
+		To check the log of particular container out of multiple in a pod 
+			kubectl logs <pod_name> -c <container_name>
 
+sidecar container 
+	- These are the containers that will run along with the main app container.
+	- we have a app conaitner which is working fine but we want to extend the 
+	  functionality without changing the existing code in main container for this 
+      purpose we can use sidecar container.
+    - we use this container to feed the log data to monitoring tools.	
+	
+	These are some of the scenarios where you can use this pattern
+		- Whenever you want to extend the functionality of the existing single container pod without
+		  touching the existing one.
+		- Whenever you want to enhance the functionality of the existing single container pod
+		  without touching the existing one.
+		- You can use this pattern to synchronize the main container code with the git server pull.
+		- You can use this pattern for sending log events to the external server.
+		- You can use this pattern for network-related tasks.
+
+    #!/bin/sh	 
+    count=0
+    while true; do 
+ 	cat /var/log/nginx/access.log /var/log/nginx/error.log 
+	((count++)) 
+	echo ------------------ 
+	echo $count 
+	echo ------------------ 
+	sleep 10 
+    done
+
+Adaptor container 
+	- In this patter we use a sidecar container to feed the log data to a monitoring tool.
+	
+	https://www.
 
 		
