@@ -36,6 +36,6 @@ spec:
    type: NodePort
    ports:
    - port: 80
-     portocol: TCP
+     protocol: TCP
    selector: 
      app: nginx-init
