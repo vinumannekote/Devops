@@ -699,6 +699,80 @@ sidecar container
 Adaptor container 
 	- In this patter we use a sidecar container to feed the log data to a monitoring tool.
 	
-	https://www.
+	https://www.weave.works/blog/kubernetes-patterns-the-adapter-pattern
+
+
+Probes 
+	- Probes are periodic call to some application endpoints within a container.
+	- We use probes to track success or failure status of other application.
+	- We can configure if there are subsequent failure accrues we mark probe as failed.
+	- Subsequent success after a failure also we can define.
+	- probes works at container level and init container will not support probes 
+	
+	Common fields
+	   initialSecondsDeplay: After the container started the number of seconds to 
+				 wait before starting the probe.
+	   periodSeconds: The number of seconds interval taken to execute the probe.
+			  (Default 10 seconds and minimum 1 second)
+	   timeoutSeconds: The number of seconds after which probe timeouts 
+			   (default 1)
+	   	
+	   failureThreshold: When a probe fails this is the number of subsequent failure time the 
+			     probe check the application endpoint.
+			     (Default 3 times and minimum 1 time)
+	   
+	   successThreshold: minimum number of subsequent success for a probe.
+			     (Default 1 time and minimum 1 time)
+ 
+	Endpoints: 
+		
+		http probes (httpGet)
+		    host - hostname to connect and check the status 
+		    	 - Default hostname is the IP of the pod in which the probe is running 	
+
+			 ex: www.google.com
+		    path: exact path to access the application on the http server 
+			ex: /mail
+		    httpHeaders: 
+			 can send custom header messages with the request.		
+		    port: Name or number of the port to access the application 
+	
+		tcp probe (tcpSocket)
+		    port: Name or number of the port to access the application
+
+		
+		exec probe 
+		    command - command to execute and based on command status probe status is defined.
+		    
+Liveness probe 
+	- liveness probe is used to check application inside container is healthy and if not healthy the it 
+	   marks container to be restarted by kubelet.
+ 
+Readiness probe 
+	- This probe will run at the initial start of the container.
+	- This probe allows us to give maximum startup time for application before 
+	  running livenessProbe or readinessprobe.
+	  
+	startupProbe: 
+	    httpGet: 
+		   path: /healtz
+		   port: 8080
+		initialDelaySeconds: 3
+	    periodSeconds: 3           
+
+
+
+
+
+
+
+
+
+
+
+	
+
+	
+	
 
 		
