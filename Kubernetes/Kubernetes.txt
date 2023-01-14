@@ -953,4 +953,125 @@ USER ACCOUNT
 
 
 Assignment: kubectl patch 
+
+Pod assignment (How to create pods in chosen nodes / particular node)
+
+1. Node Selector
+	- Node selector is a way of creating / binding pod to a worker node based on the node label 
+	- We use node selector to redirect the pod create to a worker node.
+	- We can't use any logical expressions in selection. (only one label can be matched)	
+
+	Create a label on worker node 
+	      kubectl label node <node_name> <key>=<value>
+
+
+	Using node selector in pod 
+		spec:
+     		  nodeSelector:
+        	     <key>: <value>
+		  containers:
+		     ......
+
+2. Node affinity and Anti-affinity 
+	
+	Node affinity
+		- nodeselector with logical comparison on labels is affinity 
+		- using this we can spread the pod across worker nodes based on CPU and RAM capacity, Availability zone.
+		
+		- requiredDuringSchedulingIgnoredDuringExecution			
+			The scheduler for sure it will not schedule worker node to pod unless the rule are met.
+		
+		- prefferedDuringSchedulingIgnoredDuringExecution			
+			The scheduler try to find a worker node matching the affinity rules, If match not found scheduler 
+	                will create the pod in normal way.
+
+		IgnoredDuringExecution
+		      If the node labels / conditions are changed after scheduling of pod still pods continues to run on the worker nodes.
+	 
+		spec: 
+		  containers:
+		     ......
+		  affinity: 
+                     nodeAffininty: 
+                        requiredDuringSchedulingIgnoredDuringExecution:
+                            nodeSelectorTerms:
+                                   - matchExpressions:
+                                     - key: node
+                                       operator: In
+                                       values:
+                                       - worker1
+                                       - worker2
+
+
+	Anti-affinity (Inter-pod affinity)
+		spec: 
+		  containers:
+		     ......
+		  affinity: 
+                     nodeAffininty: 
+                        requiredDuringSchedulingIgnoredDuringExecution:
+                            IfNotPresent:
+                                   - matchExpressions:
+                                     - key: node
+                                       operator: In
+                                       values:
+                                       - worker1   
+	
+		
+3. Taints and Tolerations 
+	- Taints are used to repel the pods from a specific worker node. Only the pods with tolerations are created 
+	  on a tainted worker node.
+        - 2 Operators can be used Equal and Exists (if we use Exists, no value for comparison required)
+
+	Taints Effects 
+	  NoSchedule - Unless a pod with the toleration the scheduler will never schedule the pod.
+	  NoExecute - All the pods without toleration will be deleted from worker node.
+	  
+	To add taint to worker node 
+	    kubectl taint node <node_name> <taint_key>=<tain_value>:<taint_effect>
+	
+	To delete taint to worker node 
+	    - (put '-' at the end of the command)	
+	       kubectl taint node <node_name> <taint_key>=<tain_value>:<taint_effect>-
+
+	Tolerations 
+		tolerations:
+                   - key: node
+                     operator: Equal
+                     value: test
+	             effect: NoSchedule
+
+		tolerations:
+                   - key: node
+                     operator: Exists
+	             effect: NoSchedule
+
+pod eviction 
+	- Kubernetes evict pods if the node resources are running out such as cpu, RAM and storage.
+	- Pod with failed state will be evicted first because they may not running but could still 
+	  be using cluster resources and then k8s runs decision making based.
+	- K8s internally uses taints with NoExecute effect to evict pods.
+  
+	  Kubernetes looks at two different reasons to make eviction decision: 
+			1. QoS (Quality of Service) class. 
+				For every container in the pod:
+				  - There must be a memory limit and a memory request.
+				  - The memory limit must equal the memory request.
+				  - There must be a CPU limit and a CPU request.
+				  - The CPU limit must equal the CPU request.
+
+			2. Priority class (Preemption).
+				- Preemption is the process of terminating Pods with lower Priority so that Pods with higher Priority can schedule on Nodes.
+				- A pod's priority class defines the importance of the pod compared to other 
+				  pods running in the cluster.
+				- based on the priority low to high pods will be evicted.  
+
+			3. Node pressure 
+				node.kubernetes.io/memory-pressure: Node has memory pressure.
+				node.kubernetes.io/disk-pressure: Node has disk pressure.
+				node.kubernetes.io/pid-pressure: Node has PID pressure.
+				node.kubernetes.io/network-unavailable: Node's network is unavailable.
+				node.kubernetes.io/unschedulable: Node is unschedulable.
+
+		  - Cluster autoscaler tools are mostly provided by public cloud providers.	
 		
