@@ -4,16 +4,15 @@ metadata:
   name: allow-nginx-pod
 spec:
   podSelector:
-      matchlables: 
+      matchLabels:
          app: nginx
-  Ingress: 
-  - from: 
+  ingress:
+  - from:
        - podSelector:
-            matchLabels: 
+            matchLabels:
                app: backed
     ports:
        - port: 8080
-         protocol: TCP 
+         protocol: TCP
   policyTypes:
   - Ingress
-     
