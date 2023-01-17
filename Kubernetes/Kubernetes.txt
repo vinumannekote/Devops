@@ -236,7 +236,7 @@ Deployment controller / Deployment / Deployment k8s
 	  by default it uses RollingUpdate. 
 		Other strategies: canary, Recreate, Ramped and Blue-Green 
 	- we can pause the deployment whenever we need.
-	- Deployment internally got its own autoscaler which is of type horizontal smaller.
+	- Deployment internally got its own autoscaler which is of type horizontal smaller (hap).
 	 
 	  RollingUpdate	
 		MaxSurge 
@@ -1205,14 +1205,81 @@ Resource quotas and limits
 						cpu: 1
 
 	
+HPA and VPA 
+	Metric server 
+	- Metrics Server collects resource metrics from Kubelets and exposes them in Kubernetes 
+	  API server through Metrics API for use by Horizontal Pod Autoscaler and Vertical Pod Autoscaler.
+        - kubectl top command use Metrics API to list the resource utilization of all pods. 
+	- Metrics Server is not meant for non-autoscaling purposes like we wont forward these metrics data to monitoring tools. 
+
+	1. Goto kubernetes-sigs/metric-server GitHub repo and install the metric server 
+	2. If metric server is not running and probe failure 
+		Add the below to metric-server deployment 
+			
+			- --metric-resolution=15s
+        		command:
+        		- /metrics-server
+        		- --kubelet-insecure-tls
+        		- --kubelet-preferred-address-types=InternalIP 
+    HPA (Horizontal pod autoscaler )
+	- HPA will automatically scales the number pf pod replicas using deployment, replicates, statefulSet based on CPU/memory threshold.
+	- We need metric-server as a source for resource monitor for HPA
+	
+
+	
+Multimaster cluster 	
+	What is the size of the k8s cluster ?
+		- we are manitaining different cluster for different environment
+		- we have one big cluster and environments are maintained through namepsaces
+		- always the count of master nodes should a odd number 
+		- we are using loadbalancer / multiple people are working they may dd the worker nodes 
+		  so I never kept exact count of nodes but on average we have 20 to 25 worker nodes.
+	
+	Why always the number of master nodes is odd number ?
+		- Based on Quorum calculation ((n/2)+1) we get same quorum failure rate for odd number 
+		  and its next even number of nodes, so it is better to use odd number nodes instead 
+		  of even number and we start with minimum 3 master nodes.
+		- Always tell odd number of nodes (any odd number starting with 3, 5, 7, 9)
+		- Based on the quorum value we choose only odd number of nodes starting with 3 to 
+		  achive better fault tollerance cluster.
+	
 
 
-
-
-
-
-
-
+Deployment stratergies.	
+	Rolling Update 
+		- By default deployment in k8s uses rolling update stratergy which means if I want use 
+		  this stratergy I don'nt need to specify any parameters in spec file. 
+		- Example: By default k8s automatically decides the percentage of keeping available pods.
+		  usually one out 4 it updates. 
+		
+		- To overrride the default behaviour 
+			spec: 
+				stratergy: 
+					type: RollingUpdate 
+					rollingUpdate: 
+						maxSurge: 1
+						maxUnavailable: 25%
+			
+	Recreate 
+		The Recreate stratergy will bring all the old pods down immediately and the creates 
+		new updated pods to match the replica count.
+			spec: 
+				stratergy: 
+					type: Recreate 
+					
+	Blue/Green deployment
+		- We keep 2 sets of similar environment in which one will be live called blue  
+		  environment and the one which is not live is called as green. 
+		- we update the new changes to green environment first which is not live and we 
+		  swap/ redirect the traffic from blue to green environment.
+		- Finally current green environment with new updates we rename it as blue and  
+		  the current blue environment is renamed as green we use this for next release deployment. 
+	
+	Canary release 
+		- A canary release is a software testing technique used to reduce the risk of 
+		  introducing a new software version into production by gradually rolling out 
+		  the change to a small subgroup of users, before rolling it out to the entire 
+		  platform/infrastructure.
 
 
 
