@@ -1,8 +1,10 @@
-resource "aws_instance" "instance1" {
-  ami           = "ami-0597375488017747e"
-  instance_type = "t2.micro"
-  count = 4
-  tags = {
-    Name = "Terraform"
-  }
+module "aws_s3_create" {
+    source = "./modules/s3_bucket"
+    bucket_name = var.root_module_s3_name
+}
+
+module "dynamo_db_create" {
+    source = "./modules/DynamoDB"
+    hash_key = var.root_module_hash_key
+    dynamodb_name = var.root_module_dynamodb_name
 }
