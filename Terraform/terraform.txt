@@ -189,12 +189,61 @@ Terraform module
 	- We can reuse the child modules in other projects also.
 	- These are always user defined 
 
+Taint 
+	- The terraform taint command os used to mark a terraform managed resource as tainted, which means 
+	  the resource to be destroyed and recreated in the next apply.
+	- Taint will not mark the actual resource in the cloud but it marks in the state file.
+	
+	To list resource in state 
+		terraform state list
+	To taint a resource 
+		terraform taint <terra_arn>
+
+Provisioners 
+	- Provisioners are used to copy files and directories, run command from terraform source machine to cloud 
+	  resources as a part of resource creation.
+	- They are similar to user-data scripts.
+	- Most Provisioners requires authentication to run command via ssh or WinRM and we need 
+	  define the connection.
+		(connection is a sub-block)
+		connectio {
+		     type = "ssh"
+		     user = "root"
+		     password = ""
+		     host = "<ip>"				
+		}	
+	
+
+	file 
+	    - The file Provisioner is used to copy file or directories from terraform project to cloud 
+	      compute resource.
+	    - This provisioner needs a connection to cloud resource.
+	    	 	
+	remote-exec 
+	    - The remote-exec Provisioner is used to run command or script from terraform project to cloud 
+	      compute resource.
+	    - This provisioner needs a connection to cloud resource.
+
+
+	1. ec2 instance with sg 	
+	2. file provisioner - should find a file /home/ubuntu/text.txt
+	3. remote-exec - Docker installed and file /home/ubuntu/remote-exec.txt
+	4. local-exec - creates file Conf/ec2_ips.txt (with ec2 ip address)
+
+
+Terraform workspace 
+	- workspace are a way of managing different set of statefiles which are independent to 
+	  each other.
+	- Every configuration should be in a workspace.
+	- "default" is the default workspace in terraform 
+	
+	To list workspace
+		terraform workspace list
+	
+	To create workspace 
+		terraform workspace new <workspace_name>
 
 
 
-
-
-
-
-
+	
 
